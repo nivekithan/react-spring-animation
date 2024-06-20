@@ -17,33 +17,54 @@ export default function Page() {
 
 function TextAnimation({ content }: { content: string }) {
   const words = useMemo(() => content.split(" "), [content]);
-  const [allWordAnimation] = useSprings(words.length, (i) => {
+  const charLength = useMemo(() => words.join("").length, [words]);
+
+  const [allCharAnimation] = useSprings(charLength, (i) => {
     return {
       from: { y: 40, opacity: 0, rotate: 3 },
       to: { y: 0, opacity: 1, rotate: 0 },
       config: {
-        tension: 130,
+        tension: 150,
       },
-      delay: i * 30,
+      delay: i * 20,
       // delay: i * 75,
     };
   });
 
   return (
     <p className="text-5xl">
-      {content.split(" ").map((word, wordIndex) => {
+      {words.map((word, wordIndex) => {
         return (
           <React.Fragment key={wordIndex}>
-            <a.div
-              className="inline-block origin-bottom-left"
-              key={wordIndex}
-              style={allWordAnimation[wordIndex]}
-            >
-              {word}
-            </a.div>{" "}
+            <div className="inline-block">
+              {word.split("").map((char, charIndex) => {
+                const charAnimationIndex =
+                  previousIndex(wordIndex, words) + charIndex;
+
+                const animatioStyle = allCharAnimation[charAnimationIndex];
+
+                return (
+                  <React.Fragment key={charIndex}>
+                    <a.div className="inline-block" style={animatioStyle}>
+                      {char}
+                    </a.div>
+                  </React.Fragment>
+                );
+              })}
+            </div>{" "}
           </React.Fragment>
         );
       })}
     </p>
   );
+}
+
+function previousIndex(currentIndex: number, words: string[]) {
+  if (currentIndex === 0) {
+    return currentIndex;
+  }
+
+  const allChars = words.slice(0, currentIndex).join("");
+
+  return allChars.length;
 }
