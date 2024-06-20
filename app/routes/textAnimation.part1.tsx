@@ -21,13 +21,12 @@ function TextAnimation({ content }: { content: string }) {
 
   const [allCharAnimation] = useSprings(charLength, (i) => {
     return {
-      from: { y: 40, opacity: 0, rotate: 3 },
+      from: { y: 15, opacity: 0, rotate: 1.25 },
       to: { y: 0, opacity: 1, rotate: 0 },
       config: {
-        tension: 150,
+        tension: 100,
       },
-      delay: i * 20,
-      // delay: i * 75,
+      delay: i * 17,
     };
   });
 
