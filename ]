@@ -1,0 +1,73 @@
+import { useTransition, a } from "@react-spring/web";
+import { useEffect, useState } from "react";
+
+export function loader() {
+  return null;
+}
+
+export default function Index() {
+  return (
+    <div className="h-[720px] grid place-items-center">
+      <TextSwitcher content={["Hello World", "World is new"]} />
+    </div>
+  );
+}
+
+function TextSwitcher({ content }: { content: string[] }) {
+  const [index, setIndex] = useState(0);
+  const [transition, api] = useTransition(index, () => {
+    return {
+      from: { deg: 180, opacity: 0, transformOrigin: "bottom left" },
+      enter: { deg: 0, opacity: 1, transformOrigin: "bottom left" },
+      leave: {
+        deg: -180,
+        opacity: 0,
+        transformOrigin: "top left",
+      },
+      // exitBeforeEnter: true,
+      config: {
+        friction: 100,
+        mass: 1,
+        tension: 300,
+      },
+      exitBeforeEnter: true,
+    };
+  });
+
+  useEffect(() => {
+    const cancelTimer = setTimeout(() => {
+      setIndex((index) => (index + 1) % content.length);
+    }, 2500);
+
+    return () => {
+      clearTimeout(cancelTimer);
+    };
+  }, [index, content.length]);
+
+  useEffect(() => {
+    api.start();
+  }, [index]);
+
+  return (
+    <div className="overflow-hidden">
+      {transition((style, i, state) => {
+        const item = content[i];
+        console.log(state);
+        return (
+          <a.div
+            className="inline-block origin-bottom-left text-5xl"
+            style={{
+              transform: style.deg.to(
+                (i) => ` perspective(200px) rotateX(${i}deg)`
+              ),
+              opacity: style.opacity,
+              transformOrigin: style.transformOrigin,
+            }}
+          >
+            {item}
+          </a.div>
+        );
+      })}
+    </div>
+  );
+}
