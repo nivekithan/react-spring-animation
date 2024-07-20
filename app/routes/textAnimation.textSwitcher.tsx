@@ -40,8 +40,11 @@ function TextSwitcher({ content }: { content: string[] }) {
           deg: -90,
           opacity: 0,
           transformOrigin: "top left",
-          delay: 1000 + (animateContent.length - i - 1) * 75,
+          delay: 1000 + (animateContent.length - i - 1) * 100,
           scale: 0.6,
+          config: {
+            tension: 200,
+          },
         });
 
         if (i !== 0) {
@@ -74,7 +77,7 @@ function TextSwitcher({ content }: { content: string[] }) {
               style={{
                 ...style,
                 transform: style.deg.to(
-                  (i) => `perspective(800px) rotate3d(1, 0,0,${i}deg)`
+                  (i) => `perspective(800px) rotate3d(1,0,0,${i}deg)`
                 ),
               }}
             >
